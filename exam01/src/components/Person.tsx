@@ -13,6 +13,7 @@ const Person = () => {
   })
 
   const { name, age } = data
+  //   console.log('state', state)
 
   const onIncrease = () => {
     //data.age++

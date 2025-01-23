@@ -10,7 +10,7 @@ const Restaurant = () => {
     ;(async () => {
       const res = await fetch(url)
       const items = await res.json()
-      console.log(items)
+      console.log(items) // 최초에 한번 데이터를 가져올거임
     })()
   }, [])
 
