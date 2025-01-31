@@ -23,8 +23,9 @@ const Restaurant = () => {
       // console.log(items) // 최초에 한번 데이터를 가져올거임
     })()
   }, [items, limit])
+  console.log('items', items)
 
-  // 요소가 2개 이상일때는 중괄호도 추가해줘야함
+  /* // 요소가 2개 이상일때는 중괄호도 추가해줘야함
   // 반복되는 요소는 키값이 무조건 있어야함
   return (
     <ul>
@@ -38,6 +39,25 @@ const Restaurant = () => {
           ),
         )}
     </ul>
+  )
+}*/
+
+  return (
+    <ul>
+      {items &&
+        items.map((item) => <RestaurantItem key={item.seq} item={item} />)}
+    </ul>
+  )
+}
+
+// 많은 부분이 반복되면 컴포넌트로 따로 빼서 하는 방법도 있음
+const RestaurantItem = ({ item }): React.ReactNode => {
+  const { category, name } = item
+  return (
+    <li>
+      <span>{category}</span>
+      <span>{name}</span>
+    </li>
   )
 }
 
