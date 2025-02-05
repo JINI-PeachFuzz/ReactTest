@@ -1,5 +1,6 @@
 'use server'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 
 export const processJoin = async (formState, formData: FormData) => {
   /**
@@ -81,4 +82,105 @@ export const processJoin = async (formState, formData: FormData) => {
   redirect('/member/login')
 }
 
-export const processLogin = async (form, formData: FormData) => {}
+/**
+ * 로그인 처리
+ * @param form
+ * @param formData
+ */
+export const processLogin = async (form, formData: FormData) => {
+  /**
+   * 1) 필수항목 검증
+   * 2) 서버 요청
+   * 3) 실패시 에러 메세지 출력
+   * 4) 성공시 지정된 주소 또는 메인으로 이동
+   */
+
+  const errors = {}
+  let hasErrors = false
+
+  // 1) 필수항목 검증 - S
+  const email = formData.get('email')
+  const password = formData.get('password')
+
+  if (!email || !email.trim()) {
+    errors.email = emails?.email ?? []
+    errors.email.push('이메일을 입력하세요.')
+    hasErrors = true
+  }
+
+  if (!password || !password.trim()) {
+    errors.password = errors?.password ?? []
+    errors.password.push('비밀번호를 입력하세요.')
+    hasErrors = true
+  }
+  if (hasErrors) {
+    return errors
+  }
+
+  // 1) 필수항목 검증 - E
+
+  // 2) 서버 요청 - S
+  const apiUrl = process.env.API_URL + 'member-service/login'
+  // '/api/v1/member/login' 연동되어있을경우 이런식으로 하면 됨. env 환경변수쪽에서도 뒤에 v1.. 추가해주면 됨.
+  try {
+    const res = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    })
+    const result = await res.json()
+    if (result.success) {
+      // 성공시
+      const cookie = await cookies()
+      cookie.set('token', result.data, {
+        httpOnly: true, // 반드시 쿠키를 서버를 통해서만 확인가능하게 꼭 보안적인 처리를 해줘야함
+        sameSite: 'none',
+        secure: true,
+        path: '/',
+      }) // 쿠키를 설정하는 거 자체가 로그인 처리라고 보면 됨
+      // 토큰형식의 로그인 처리
+
+      // console.log(result)
+    } else {
+      // 실패시
+      return result.message
+    }
+  } catch (err) {
+    console.error(err)
+  }
+
+  // 2) 서버 요청 - E
+
+  redirect('/')
+}
+
+/**
+ * 로그인한 사용자 정보 조회
+ * - token 쿠키를 가지고 서버에 요청
+ */
+export const getUserInfo = async () => {
+  const cookie = await cookies()
+  const token = cookie.get('token')
+  if (!token) return
+
+if.
+
+  try {
+    const apiUrl = process.env.API_URL + '/member-service'
+    const res = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    })
+
+    if (res.status === 200) {
+      const result = await res.json()
+      return result.data
+    }
+  } catch (err) {
+    console.error(err)
+  }
+}

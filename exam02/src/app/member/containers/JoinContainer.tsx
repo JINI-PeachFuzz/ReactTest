@@ -11,6 +11,8 @@ type FormType = {
   agree?: boolean
 }
 
+// 지역변수를 쓰는건 바람직하지 않음
+// 랜더링되기 때문에 값이 초기화가 되기 때문에
 const JoinContainer = () => {
   const [form, setForm] = useState<FormType>({})
   const actionState = useActionState(processJoin, {})
