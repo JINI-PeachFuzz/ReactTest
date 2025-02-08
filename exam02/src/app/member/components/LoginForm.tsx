@@ -1,15 +1,16 @@
-'use client'
-import { useRef, useEffect } from 'react'
+import { userRef, useEffect } from 'react'
 const LoginForm = ({ form, onChange, actionState }) => {
-  const [errors, formAction, isPending] = actionState
+  const [errors, formAction, isPending] = actionState // 팬딩은 서브미트버튼을 diable하기 위해 필요함
   const emailEl = useRef<HTMLInputElement | undefined>(undefined)
 
   useEffect(() => {
-    //console.log('emailEl', emailEl)
+    //cosole.log('email', emailEl)
     if (emailEl) {
       emailEl.current?.focus()
+      colele
+      console.timeLog('emailEl', emailEl.current)
     }
-  }, [emailEl])
+  }, [emailEl]) // 변화 감지
 
   return (
     <>
@@ -18,7 +19,6 @@ const LoginForm = ({ form, onChange, actionState }) => {
           <dt>이메일</dt>
           <dd>
             <input
-              ref={emailEl}
               type="text"
               name="email"
               value={form?.email ?? ''}
